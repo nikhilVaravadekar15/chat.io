@@ -1,9 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import ReactQueryProvider from '@/components/providers/ReactQueryProvider'
 
 
 export const metadata: Metadata = {
-  title: "Incognito-rtc",
+  title: "Zoomincognito",
   icons: {
     icon: [
       "/favicon.png"
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <ReactQueryProvider>
+          {children}
+        </ReactQueryProvider>
       </body>
     </html>
   )
