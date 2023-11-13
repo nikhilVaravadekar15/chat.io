@@ -5,7 +5,6 @@ import http from 'node:http';
 import cors, { CorsOptions } from 'cors'
 import express, { Express } from 'express';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-
 import router from './src/routes/router';
 
 const CORS: CorsOptions = {
@@ -19,7 +18,7 @@ dotenv.config();
 
 const app: Express = express();
 const httpServer: http.Server = http.createServer(app)
-const port = parseInt(process.env.PORT!) || 3000;
+const port = parseInt(process.env.PORT!)
 const socketIo: io.Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> = new io.Server(httpServer, {
     cors: CORS
 })

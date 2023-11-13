@@ -3,13 +3,16 @@ import express, { Router, Request, Response } from 'express'
 
 const router: Router = express.Router()
 
+router.post("/api/room/create", roomController.createRoom);
+router.post("/api/room/validate", roomController.validateRoom);
 
-router.post('/api/room', roomController.createRoom);
-router.get('/api/room/:room', roomController.getRoom);
+router.get('/404', (request: Request, response: Response) => {
+    response.status(404).json({ "message": "404 not found" })
+});
 
-router.get('/api/test', (req: Request, res: Response) => {
-    res.json({ "message": "Express + TypeScript Server" })
-
+router.get('/api/test', (request: Request, response: Response) => {
+    response.json({ "message": "Express + TypeScript Server" })
 })
+
 
 export default router;

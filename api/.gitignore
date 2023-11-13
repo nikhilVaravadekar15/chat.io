@@ -6,8 +6,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# local env files
 .env
+.env*.local
+
+# database
+*.db
 
 # backend distribution directories and files
 dist
