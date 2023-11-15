@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/popover"
 import React from 'react'
 import copy from 'copy-to-clipboard'
+import { TRoomContext } from '@/types'
 import { Button } from "@/components/ui/button"
+import { RoomContext } from '@/components/providers/RoomContext'
 
 
 type Props = {}
@@ -18,6 +20,7 @@ type Props = {}
 export default function InvitePopover({ }: Props) {
 
     const [isCopied, setIsCopied] = React.useState(false)
+    const { roomDetails } = React.useContext<TRoomContext>(RoomContext);
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -44,7 +47,7 @@ export default function InvitePopover({ }: Props) {
                         type="text"
                         id="link"
                         disabled={true}
-                        value={`${process.env.NEXT_PUBLIC_BASE_URL!}join/:id`}
+                        value={`${process.env.NEXT_PUBLIC_BASE_URL!}join?id=${roomDetails.id}`}
                         className="bg-transparent cursor-pointer select-all overflow-hidden"
                     />
                     {
@@ -56,7 +59,7 @@ export default function InvitePopover({ }: Props) {
                             <Copy
                                 className="p-2 w-9 h-9 text-xl text-gray-500 border border-gray-500 rounded-full cursor-pointer"
                                 onClick={() => {
-                                    copy(`${process.env.NEXT_PUBLIC_BASE_URL!}join/:id`);
+                                    copy(`${process.env.NEXT_PUBLIC_BASE_URL!}join?id=${roomDetails.id}`);
                                     setIsCopied(true)
                                 }}
                             />

@@ -3,6 +3,7 @@ import express, { Router, Request, Response } from 'express'
 
 const router: Router = express.Router()
 
+router.get("/api/room/:room", roomController.getRoom);
 router.post("/api/room/create", roomController.createRoom);
 router.post("/api/room/validate", roomController.validateRoom);
 

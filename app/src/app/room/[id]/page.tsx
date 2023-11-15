@@ -3,15 +3,42 @@
 import React from 'react'
 import { cn } from '@/lib/utils';
 import io from 'socket.io-client';
+import { getRoom } from '@/http';
 import { Navbar } from '@/components/Navbar'
 import Videocard from '@/components/Videocard'
+import { useToast } from '@/components/ui/use-toast';
 import ActionButtons from '@/components/ActionButtons';
+import { TRoomContext, TRoomDetails } from '@/types';
+import { RoomContext } from '@/components/providers/RoomContext';
+
 
 type Props = {
     params: { id: string },
     searchParams: {}
 }
 export default function Roompage({ params }: Props) {
+
+    const { toast } = useToast()
+    const { roomDetails, setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
+
+    React.useEffect(() => {
+
+        const roomid: string = params.id
+        if (!roomDetails.id) {
+            getRoom(roomid)
+                .then((response) => {
+                    const room: TRoomDetails = response.data?.room
+                    setRoomDetails(room)
+                })
+                .catch((err) => {
+                    toast({
+                        variant: "destructive",
+                        title: "Unable to join room",
+                        description: "Something went wrong, please try again later.",
+                    })
+                })
+        }
+    }, [])
 
     React.useEffect(() => {
         const roomid: string = params.id

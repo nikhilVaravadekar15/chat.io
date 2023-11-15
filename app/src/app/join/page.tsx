@@ -27,13 +27,17 @@ import { TRoom, TRoomContext, TRoomDetails } from "@/types"
 import { RoomContext } from '@/components/providers/RoomContext'
 
 
-type Props = {}
+type Props = {
+    params: {},
+    searchParams: { id: string }
+}
 
-export default function JoinPage({ }: Props) {
+export default function JoinPage({ searchParams }: Props) {
 
     const { toast } = useToast()
     const { push } = useRouter()
-    const { setRoomDetails } = React.useContext<TRoomContext>(RoomContext);
+    const [roomid, setRoomid] = React.useState<string>("")
+    const { setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
     const {
         register: registerJoin,
         getFieldState: getFieldStateJoin,
@@ -47,7 +51,7 @@ export default function JoinPage({ }: Props) {
         mutationFn: async (data: TRoom) => {
             return await validateRoom(data)
         },
-        onSuccess: () => {
+        onSuccess: (response) => {
             const room: TRoomDetails = response?.data?.room
             const roomid: string = room.id!
             setRoomDetails(room)
@@ -61,6 +65,12 @@ export default function JoinPage({ }: Props) {
             })
         }
     })
+
+    React.useEffect(() => {
+        const roomid: string = searchParams.id
+        setRoomid(roomid ? roomid : "")
+    }, [])
+
 
     return (
         <main className="h-screen w-screen flex items-center justify-center">
@@ -88,6 +98,7 @@ export default function JoinPage({ }: Props) {
                             <Input
                                 type="text"
                                 id="name"
+                                defaultValue={roomid}
                                 autoComplete="off"
                                 {...registerJoin("name" as const, { required: true })}
                             />

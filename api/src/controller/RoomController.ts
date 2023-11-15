@@ -5,6 +5,37 @@ import hashService from "../services/HashService";
 
 class RoomController {
 
+    async getRoom(request: Request, response: Response,) {
+
+        try {
+
+            const roomid: string = request.params.room;
+            if (!roomid) {
+                response.status(400).json({
+                    "message": "All fields are required"
+                })
+            }
+
+            const room = await RoomService.getUniqueRoom(roomid!)
+            if (!room) {
+                response.status(404).json({
+                    "message": "Invalid room id"
+                })
+            } else {
+                response.status(200).json({
+                    "room": room!
+                })
+            }
+        }
+        catch (error: any) {
+            console.log(error)
+            response.status(500).json({
+                "message": "Something went wrong, please try again."
+            })
+        }
+
+    }
+
     async validateRoom(request: Request, response: Response,) {
 
         try {
@@ -18,8 +49,8 @@ class RoomController {
 
             const room = await RoomService.getUniqueRoom(roomid!)
             if (!room) {
-                response.status(500).json({
-                    "message": "Something went wrong, please try again."
+                response.status(404).json({
+                    "message": "Invalid room id"
                 })
             }
 
