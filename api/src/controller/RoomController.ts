@@ -23,7 +23,7 @@ class RoomController {
                 })
             }
 
-            const valid: boolean = await hashService.comparehash(password, room.password)
+            const valid: boolean = await hashService.comparehash(password, room.code)
             console.log(valid)
             if (!valid) {
                 response.status(404).json({

@@ -7,8 +7,8 @@ export const rooms = sqliteTable(
     "rooms",
     {
         id: text("id").primaryKey().unique().notNull().$defaultFn(() => createId()),
-        roomname: text("roomname").notNull(),
-        password: text("password").notNull(),
+        name: text("name").notNull(),
+        code: text("code").notNull(),
         created_at: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
     }
 );

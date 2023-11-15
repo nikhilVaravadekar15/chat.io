@@ -8,7 +8,7 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import router from './src/routes/router';
 
 const CORS: CorsOptions = {
-    origin: ["*"],
+    origin: [process.env.CORS_ORIGIN! || "*"],
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -34,6 +34,19 @@ app.use(express.json())
 
 // load routers 
 app.use("/", router)
+
+socketIo.on("connection", (socket) => {
+    // console.log('client connected', socket.id);
+
+    socket.on("room:join", (roomId) => {
+        console.log(roomId)
+    })
+
+    socketIo.on("disconnect", () => {
+        console.log('client disconnected', socket);
+    })
+});
+
 
 httpServer.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

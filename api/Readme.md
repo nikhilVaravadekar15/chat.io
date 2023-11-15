@@ -16,4 +16,7 @@
 ```
     npx drizzle-kit generate:sqlite; 
     npx drizzle-kit push:sqlite;
+
+    # To drop migrations
+    npx drizzle-kit drop 
 ```

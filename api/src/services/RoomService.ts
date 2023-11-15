@@ -8,8 +8,8 @@ class RoomService {
 
     async createRoom({ room: roomname, code: hashpassword }: TRoom) {
         return (await db.insert(rooms).values({
-            roomname: roomname,
-            password: hashpassword
+            name: roomname,
+            code: hashpassword
         }).returning())[0];
     }
 

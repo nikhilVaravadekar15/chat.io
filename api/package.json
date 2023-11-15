@@ -9,7 +9,7 @@
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/index.js\""
+    "dev": "concurrently \"npx drizzle-kit push:sqlite;\" \"npx tsc --watch\" \"nodemon dist/index.js\""
   },
   "author": {
     "name": "nikhilVaravadekar15",
