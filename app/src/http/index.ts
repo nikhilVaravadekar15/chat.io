@@ -1,7 +1,8 @@
+import { TRoom } from "@/types";
 import axios, { AxiosRequestConfig } from "axios";
 
-export const API_BASE_URL: string = process.env.NEXT_PUBLIC_BASE_URL!
-export const axiosRequestConfig: AxiosRequestConfig = {
+const axiosRequestConfig: AxiosRequestConfig = {
+    baseURL: process.env.NEXT_PUBLIC_BASE_API_URL!,
     withCredentials: true,
     headers: {
         "Accept": "application/json",
@@ -9,10 +10,24 @@ export const axiosRequestConfig: AxiosRequestConfig = {
     }
 }
 
-export async function generateResume() {
+export async function createRoom({ name: roomname, code: password }: TRoom) {
     return await axios.post(
-        "/api/generate-resume",
-        {},
+        "/api/room/create",
+        {
+            room: roomname,
+            code: password
+        },
+        axiosRequestConfig
+    )
+}
+
+export async function validateRoom({ name: roomid, code: password }: TRoom) {
+    return await axios.post(
+        "/api/room/validate",
+        {
+            room: roomid,
+            code: password
+        },
         axiosRequestConfig
     )
 }

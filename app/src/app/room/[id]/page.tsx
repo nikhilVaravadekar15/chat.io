@@ -1,15 +1,31 @@
+"use client"
+
 import React from 'react'
 import { cn } from '@/lib/utils';
+import io from 'socket.io-client';
 import { Navbar } from '@/components/Navbar'
 import Videocard from '@/components/Videocard'
 import ActionButtons from '@/components/ActionButtons';
 
-type Props = {}
+type Props = {
+    params: { id: string },
+    searchParams: {}
+}
+export default function Roompage({ params }: Props) {
 
-export default function Roompage({ }: Props) {
+    React.useEffect(() => {
+        const roomid: string = params.id
+
+        const socket = io(`ws://${process.env.NEXT_PUBLIC_SOCKETIO_URL!}`, {
+            reconnectionDelayMax: 10000,
+        });
+
+        socket.emit("room:join", roomid);
+
+    }, [])
+
 
     const array: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    console.log(array.length);
     return (
         <main className="relative h-screen w-screen flex flex-col items-center justify-center">
             <Navbar />

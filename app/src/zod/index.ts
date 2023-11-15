@@ -1,10 +1,16 @@
 import { z } from 'zod';
 
+export const username = z.object({
+    name: z.string()
+        .min(1, "Required")
+        .max(256, "Username must be less than 256 characters"),
+})
+
 export const room = z.object({
-    roomname: z.string()
+    name: z.string()
         .min(1, "Required")
         .max(256, "Room name must be less than 256 characters"),
-    password: z.string()
+    code: z.string()
         .min(1, "Required")
         .max(256, "Secret code must be less than 256 characters"),
 })
