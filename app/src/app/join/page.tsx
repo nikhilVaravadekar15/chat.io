@@ -14,28 +14,23 @@ import {
 import React from 'react'
 import { room } from "@/zod"
 import Link from 'next/link'
+import { validateRoom } from '@/http'
 import { useMutation } from 'react-query'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { createRoom, validateRoom } from '@/http'
 import { useToast } from '@/components/ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TRoom, TRoomContext, TRoomDetails } from "@/types"
-import { RoomContext } from '@/components/providers/RoomContext'
+import { RoomContext } from '@/components/providers/RoomContextProvider'
 
 
-type Props = {
-    params: {},
-    searchParams: { id: string }
-}
+export default function JoinPage() {
 
-export default function JoinPage({ searchParams }: Props) {
-
+    const router = useRouter()
     const { toast } = useToast()
-    const { push } = useRouter()
     const [roomid, setRoomid] = React.useState<string>("")
     const { setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
     const {
@@ -55,22 +50,16 @@ export default function JoinPage({ searchParams }: Props) {
             const room: TRoomDetails = response?.data?.room
             const roomid: string = room.id!
             setRoomDetails(room)
-            push(`/room/${roomid}`)
+            router.push(`/room/${roomid}`)
         },
-        onError: (error) => {
+        onError: (error: any) => {
             toast({
                 variant: "destructive",
-                title: "Unable to create room",
-                description: "Something went wrong, please try again later.",
+                title: "Unable to join room",
+                description: error?.response.data?.message ? error?.response.data?.message : "Something went wrong, please try again later.",
             })
         }
     })
-
-    React.useEffect(() => {
-        const roomid: string = searchParams.id
-        setRoomid(roomid ? roomid : "")
-    }, [])
-
 
     return (
         <main className="h-screen w-screen flex items-center justify-center">

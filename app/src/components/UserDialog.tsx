@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { TUser, TUserContext } from "@/types";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserContext } from "@/components/providers/UserContext";
+import { UserContext } from "@/components/providers/UserContextProvider";
 
 
 export default function UserDialog() {

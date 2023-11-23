@@ -11,25 +11,26 @@ class RoomController {
 
             const roomid: string = request.params.room;
             if (!roomid) {
-                response.status(400).json({
+                return response.status(400).json({
                     "message": "All fields are required"
                 })
             }
 
             const room = await RoomService.getUniqueRoom(roomid!)
             if (!room) {
-                response.status(404).json({
+                return response.status(404).json({
                     "message": "Invalid room id"
                 })
-            } else {
-                response.status(200).json({
-                    "room": room!
-                })
             }
+
+            return response.status(200).json({
+                "room": room!
+            })
+
         }
         catch (error: any) {
             console.log(error)
-            response.status(500).json({
+            return response.status(500).json({
                 "message": "Something went wrong, please try again."
             })
         }
@@ -42,34 +43,33 @@ class RoomController {
 
             const { room: roomid, code: password }: TRoom = request.body;
             if (!roomid || !password) {
-                response.status(400).json({
+                return response.status(400).json({
                     "message": "All fields are required"
                 })
             }
 
             const room = await RoomService.getUniqueRoom(roomid!)
             if (!room) {
-                response.status(404).json({
+                return response.status(404).json({
                     "message": "Invalid room id"
                 })
             }
 
             const valid: boolean = await hashService.comparehash(password, room.code)
-            console.log(valid)
             if (!valid) {
-                response.status(404).json({
+                return response.status(401).json({
                     "message": "Invalid secret code"
                 })
             }
 
-            response.status(200).json({
+            return response.status(200).json({
                 "room": room!
             })
 
         }
         catch (error: any) {
             console.log(error)
-            response.status(500).json({
+            return response.status(500).json({
                 "message": "Something went wrong, please try again."
             })
         }
@@ -82,30 +82,28 @@ class RoomController {
 
             const { room: roomname, code: password }: TRoom = request.body;
             if (!roomname || !password) {
-                response.status(400).json({
+                return response.status(400).json({
                     "message": "All fields are required"
                 })
             }
 
             const room = await RoomService.createRoom({
-                room: roomname!,
-                code: await hashService.gethash(password!)
+                room: roomname!, code: await hashService.gethash(password!)
             })
-
             if (!room) {
-                response.status(500).json({
+                return response.status(500).json({
                     "message": "Something went wrong, please try again."
                 })
             }
 
-            response.status(201).json({
+            return response.status(201).json({
                 "room": room!
             })
 
         }
         catch (error: any) {
             console.log(error)
-            response.status(500).json({
+            return response.status(500).json({
                 "message": "Something went wrong, please try again."
             })
         }

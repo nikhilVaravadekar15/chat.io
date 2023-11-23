@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button"
 import { useToast } from '@/components/ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TRoom, TRoomContext, TRoomDetails } from "@/types"
-import { RoomContext } from '@/components/providers/RoomContext'
+import { RoomContext } from '@/components/providers/RoomContextProvider'
 
 
 export default function Home() {

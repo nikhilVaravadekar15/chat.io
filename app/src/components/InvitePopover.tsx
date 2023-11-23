@@ -12,7 +12,7 @@ import React from 'react'
 import copy from 'copy-to-clipboard'
 import { TRoomContext } from '@/types'
 import { Button } from "@/components/ui/button"
-import { RoomContext } from '@/components/providers/RoomContext'
+import { RoomContext } from '@/components/providers/RoomContextProvider'
 
 
 type Props = {}
@@ -46,9 +46,9 @@ export default function InvitePopover({ }: Props) {
                     <input
                         type="text"
                         id="link"
-                        disabled={true}
-                        value={`${process.env.NEXT_PUBLIC_BASE_URL!}join?id=${roomDetails.id}`}
-                        className="bg-transparent cursor-pointer select-all overflow-hidden"
+                        readOnly={true}
+                        value={`${process.env.NEXT_PUBLIC_BASE_URL!}room/${roomDetails.id}`}
+                        className="bg-transparent border-none outline-none cursor-pointer select-all overflow-hidden"
                     />
                     {
                         isCopied ? (
@@ -59,7 +59,7 @@ export default function InvitePopover({ }: Props) {
                             <Copy
                                 className="p-2 w-9 h-9 text-xl text-gray-500 border border-gray-500 rounded-full cursor-pointer"
                                 onClick={() => {
-                                    copy(`${process.env.NEXT_PUBLIC_BASE_URL!}join?id=${roomDetails.id}`);
+                                    copy(`${process.env.NEXT_PUBLIC_BASE_URL!}room/${roomDetails.id}`);
                                     setIsCopied(true)
                                 }}
                             />
