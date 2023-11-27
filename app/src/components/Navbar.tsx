@@ -16,7 +16,7 @@ export function Navbar() {
     const { roomDetails } = React.useContext<TRoomContext>(RoomContext);
 
     return (
-        <div className="w-full p-2 flex items-center justify-between border rounded-md">
+        <div className="h-full w-full p-2 flex items-center justify-between border rounded-md">
             <div className="flex gap-6 items-center cursor-pointer">
                 <Link href="/" className="flex gap-1 items-center justify-center">
                     <Image
@@ -27,7 +27,7 @@ export function Navbar() {
                         draggable={false}
                         className="cursor-pointer"
                     />
-                    <div className="text-lg font-bold">Meet</div>
+                    <div className="text-lg font-bold">Skibble</div>
                 </Link>
                 {
                     roomDetails.name && (

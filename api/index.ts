@@ -51,17 +51,11 @@ socketIo.on("connection", (socket) => {
         }
         map.get(roomid)?.set(socketid, fakerService.getFullName())
 
-        socketIo.to(roomid).emit("room:user:joining", {
-            socketid: socketid,
-            username: map.get(roomid)?.get(socketid),
-            joining: true
-        })
-
         socket.join(roomid)
-        socketIo.to(socketid).emit("room:user:joined", {
+        // if (socketIo.sockets.adapter.rooms.get(roomid)?.size === 1) {}
+        socketIo.to(roomid).emit("room:user:joined", {
             socketid: socketid,
             username: map.get(roomid)?.get(socketid),
-            len: map.get(roomid)?.size || 0,
         })
 
         console.log(map)

@@ -8,7 +8,7 @@ export default function NotFound() {
     return (
         <main className="h-screen w-screen flex flex-col items-center justify-center">
             <div className="text-center">
-                <p className="text-base font-semibold text-black">404</p>
+                <p className="text-base font-semibold">404</p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-5xl">
                     Page not found
                 </h1>
@@ -19,7 +19,7 @@ export default function NotFound() {
             <div className="mt-4 flex items-center justify-center gap-x-3">
                 <Link
                     href={"/"} passHref={true}
-                    className="text-sm py-4 px-8 flex gap-2 items-center justify-center font-semibold text-white bg-[#0096df] rounded-2xl hover:bg-[#0096ff]"
+                    className="text-sm py-4 px-8 flex gap-2 items-center justify-center font-semibold text-black rounded-2xl bg-[#ffff16] hover:bg-[#e4e440]"
                 >
                     <ArrowBigLeft size={20} />
                     Go back

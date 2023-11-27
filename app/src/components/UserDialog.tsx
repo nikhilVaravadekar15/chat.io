@@ -48,7 +48,7 @@ export default function UserDialog() {
                 <DialogHeader>
                     <DialogTitle>Set Username</DialogTitle>
                     <DialogDescription>
-                        Set username to let everyone in the team-meet get to know you.
+                        Set username to let everyone in the room get to know you.
                     </DialogDescription>
                 </DialogHeader>
                 <form

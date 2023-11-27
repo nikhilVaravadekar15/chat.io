@@ -2,20 +2,18 @@
 "use client"
 
 import React from 'react'
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { getRoom, validateRoom } from '@/http';
 import { Navbar } from '@/components/Navbar'
-import Videocard from '@/components/Videocard'
-import peerService from '@/service/PeerService'
+import Spinner from '@/components/Spinner';
+import { getRoom, validateRoom } from '@/http';
 import { useToast } from '@/components/ui/use-toast';
-import ActionButtons from '@/components/ActionButtons';
 import { RoomContext } from '@/components/providers/RoomContextProvider';
-import { TSecretcodeContext, TRoomContext, TRoomDetails, TActionButtonContext } from '@/types';
+import { TSecretcodeContext, TRoomContext, TRoomDetails } from '@/types';
 import { SecretcodeContext } from '@/components/providers/SecretcodeContextProvider';
 import { useSocket } from '@/components/providers/SocketContextProvider';
-import Spinner from '@/components/Spinner';
-import { ActionButtonContext } from '@/components/providers/ActionButtonContextProvider';
+import ParticipantsSidebar from '@/components/ParticipantsSidebar';
+import DrawingBoard from '@/components/DrawingBoard';
+import ChatRightSidebar from '@/components/ChatRightSidebar';
 
 
 type Props = {
@@ -34,12 +32,10 @@ export default function Roompage({ params }: Props) {
     const socket = useSocket()
     const router = useRouter()
     const { toast } = useToast()
-    const [myStream, setMyStream] = React.useState<MediaStream>();
     const [joining, setJoining] = React.useState<boolean>(false)
     const [participants, setParticipants] = React.useState<TParticipant[]>([])
     const { roomDetails, setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
     const { setStatus, passwordDetails } = React.useContext<TSecretcodeContext>(SecretcodeContext)
-    const { audio, video } = React.useContext<TActionButtonContext>(ActionButtonContext)
 
     React.useEffect(() => {
         const roomid: string = params.id
@@ -91,21 +87,10 @@ export default function Roompage({ params }: Props) {
             socket?.emit("room:join", { roomid: roomid });
         }
 
-        socket?.on("room:user:joining", (data) => {
+        socket?.on("room:user:joined", async (data) => {
             setParticipants((prevData: TParticipant[]) => {
                 return [...prevData, data]
             })
-        });
-
-        socket?.on("room:user:joined", async (data) => {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: audio,
-                video: video,
-            });
-            setJoining(true)
-            const offer: RTCSessionDescriptionInit | undefined = await peerService.getOffer();
-            socket?.emit("room:meet", { offer });
-            setMyStream(stream);
         });
 
         socket?.on("disconnect", (reason) => {
@@ -122,39 +107,14 @@ export default function Roompage({ params }: Props) {
     }, [roomDetails.created_at])
 
     return (
-        <main className="relative h-screen w-screen flex flex-col items-center justify-center">
-            <Navbar />
-            <div className={cn(
-                "h-full w-full mb-16 p-4 grid gap-2 items-center justify-center",
-                participants.length === 1 && "grid-rows-1 grid-cols-1",
-                participants.length > 1 && participants.length <= 4 && "grid-cols-2",
-                participants.length > 4 && participants.length < 9 && "grid-cols-3",
-                participants.length >= 9 && participants.length <= 12 && "grid-rows-2 grid-cols-6",
-                participants.length > 12 && participants.length <= 15 && "grid-rows-3 grid-cols-5",
-                participants.length > 15 && participants.length <= 21 && "grid-rows-4 grid-cols-5",
-                participants.length > 21 && participants.length <= 25 && "grid-rows-5 grid-cols-5",
-                participants.length > 25 && participants.length <= 30 && "grid-rows-5 grid-cols-6",
-                participants.length > 30 && participants.length <= 35 && "grid-rows-6 grid-cols-6",
-                participants.length > 35 && participants.length <= 40 && "grid-rows-4 grid-cols-10",
-            )}>
-                {
-                    participants.length === 0 && joining && (
-                        <div>
-                            <Spinner />
-                            Waiting for others
-                        </div>
-                    )
-                }
-                {
-                    participants.length != 0 && participants.map((participant: TParticipant, index: number) => {
-                        return (
-                            <Videocard key={index} />
-                        )
-                    })
-                }
+        <main className="relative h-screen w-screen flex flex-col items-center">
+            <div className="h-[60px] w-full">
+                <Navbar />
             </div>
-            <div className="absolute bottom-0 w-full">
-                <ActionButtons />
+            <div className="h-[calc(100%-60px)] w-full grid grid-cols-[20%_minmax(55%,_1fr)_25%]">
+                <ParticipantsSidebar />
+                <DrawingBoard />
+                <ChatRightSidebar />
             </div>
         </main >
     )

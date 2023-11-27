@@ -28,13 +28,3 @@ export type TRoomContext = {
     setRoomDetails: (room: TRoom) => void
 }
 
-export type TActionButtonContext = {
-    audio: boolean
-    setAudio: (audio: boolean) => void
-    video: boolean
-    setVideo: (video: boolean) => void
-    screenShare: boolean
-    setScreenShare: (screenShare: boolean) => void
-}
-
-

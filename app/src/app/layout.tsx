@@ -10,7 +10,7 @@ import SocketContextProvider from '@/components/providers/SocketContextProvider'
 
 
 export const metadata: Metadata = {
-  title: "Meet",
+  title: "skibble",
   icons: {
     icon: [
       "/favicon.png"

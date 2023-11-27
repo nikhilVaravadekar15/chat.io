@@ -34,7 +34,7 @@ export default function CodeDialog() {
                 <DialogHeader>
                     <DialogTitle>Enter secret code</DialogTitle>
                     <DialogDescription>
-                        Enter secret code to join meet.
+                        Enter secret code to join the room.
                     </DialogDescription>
                 </DialogHeader>
                 <form

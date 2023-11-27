@@ -1,7 +1,6 @@
 {
   "name": "api",
   "version": "0.0.1",
-  "description": "meetincognito | Google Meet clone without signin",
   "main": "index.ts",
   "scripts": {
     "build": "npx tsc",

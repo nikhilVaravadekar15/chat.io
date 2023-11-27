@@ -66,13 +66,13 @@ export default function JoinPage() {
             <Card className="w-[448px]">
                 <CardHeader>
                     <CardTitle className="flex gap-1 items-center">
-                        <Hash className="cursor-pointer text-[#0096df] hover:text-[#0096ff]" />
+                        <Hash className="animate-bounce cursor-pointer text-[#ffff16]" />
                         Join room
                     </CardTitle>
                     <CardDescription className="flex gap-2 items-center">
                         <span>Join new room in one-click</span>
                         or
-                        <Link href={"/create"} className="text-blue-400 text-base font-bold hover:underline">Create</Link>
+                        <Link href={"/create"} className="text-blue-400 text-base font-bold hover:underline hover:text-[#ffff16]">Create</Link>
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -106,7 +106,7 @@ export default function JoinPage() {
                         <div className="flex items-center justify-end">
                             <Button
                                 type={"submit"}
-                                className="text-white bg-[#0096df] hover:bg-[#0096ff]"
+                                className="bg-[#ffff16] hover:bg-[#e4e440]"
                             >
                                 Join
                                 <ArrowBigRight size={"1.25rem"} />
