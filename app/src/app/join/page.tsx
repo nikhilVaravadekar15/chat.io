@@ -23,34 +23,36 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from '@/components/ui/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRoom, TRoomContext, TRoomDetails } from "@/types"
+import { TRoom, TRoomContext, TRoomDetails, TSecretcodeContext } from "@/types"
 import { RoomContext } from '@/components/providers/RoomContextProvider'
+import { SecretcodeContext } from '@/components/providers/SecretcodeContextProvider'
 
 
 export default function JoinPage() {
 
     const router = useRouter()
     const { toast } = useToast()
-    const [roomid, setRoomid] = React.useState<string>("")
     const { setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
+    const { setPasswordDetails } = React.useContext<TSecretcodeContext>(SecretcodeContext)
     const {
-        register: registerJoin,
-        getFieldState: getFieldStateJoin,
-        handleSubmit: handleSubmitJoin,
+        register,
+        getFieldState,
+        handleSubmit,
     } = useForm<TRoom>({
         resolver: zodResolver(room),
     });
 
-    // Mutations
-    const { isLoading, isSuccess, isError, mutate, data: response } = useMutation({
+    const roomJoinMutation = useMutation({
         mutationFn: async (data: TRoom) => {
             return await validateRoom(data)
         },
         onSuccess: (response) => {
             const room: TRoomDetails = response?.data?.room
-            const roomid: string = room.id!
             setRoomDetails(room)
-            router.push(`/room/${roomid}`)
+            setPasswordDetails({
+                code: room.code!
+            })
+            router.push(`/room/${room.id!}`)
         },
         onError: (error: any) => {
             toast({
@@ -78,20 +80,19 @@ export default function JoinPage() {
                 <CardContent>
                     <form
                         className="space-y-4"
-                        onSubmit={handleSubmitJoin((data: TRoom) => {
-                            mutate(data)
+                        onSubmit={handleSubmit((data: TRoom) => {
+                            roomJoinMutation.mutate(data)
                         })}
                     >
                         <div className="space-y-1">
                             <Label htmlFor="name">Room id</Label>
                             <Input
-                                type="text"
                                 id="name"
-                                defaultValue={roomid}
+                                type="text"
                                 autoComplete="off"
-                                {...registerJoin("name" as const, { required: true })}
+                                {...register("name" as const, { required: true })}
                             />
-                            <span className="text-xs text-red-500">{getFieldStateJoin("name").error?.message}</span>
+                            <span className="text-xs text-red-500">{getFieldState("name").error?.message}</span>
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="code">Secret code</Label>
@@ -99,9 +100,9 @@ export default function JoinPage() {
                                 type="password"
                                 id="code"
                                 autoComplete="off"
-                                {...registerJoin("code" as const, { required: true })}
+                                {...register("code" as const, { required: true })}
                             />
-                            <span className="text-xs text-red-500">{getFieldStateJoin("code").error?.message}</span>
+                            <span className="text-xs text-red-500">{getFieldState("code").error?.message}</span>
                         </div>
                         <div className="flex items-center justify-end">
                             <Button

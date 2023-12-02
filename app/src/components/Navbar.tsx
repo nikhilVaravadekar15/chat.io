@@ -7,7 +7,6 @@ import { TRoomContext } from '@/types'
 import { Badge } from "@/components/ui/badge"
 import UserDialog from "@/components/UserDialog"
 import InvitePopover from '@/components/InvitePopover'
-import CodeDialog from '@/components/CodeDialog'
 import { RoomContext } from '@/components/providers/RoomContextProvider'
 
 
@@ -40,7 +39,6 @@ export function Navbar() {
             <div className="flex gap-3 items-center justify-center">
                 <UserDialog />
                 <InvitePopover />
-                <CodeDialog />
             </div>
         </div>
     )

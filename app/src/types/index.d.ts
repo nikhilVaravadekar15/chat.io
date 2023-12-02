@@ -20,8 +20,11 @@ export type TSecretcodeContext = {
 export type TRoom = z.infer<typeof room>
 export type TRoomDetails = TRoom & {
     id?: string,
+    timer?: number,
+    rounds?: number,
     created_at?: string
 }
+
 
 export type TRoomContext = {
     roomDetails: TRoomDetails

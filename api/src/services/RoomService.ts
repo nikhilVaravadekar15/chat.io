@@ -6,10 +6,11 @@ import { rooms } from "../database/schema";
 
 class RoomService {
 
-    async createRoom({ room: roomname, code: hashpassword }: TRoom) {
+    async createRoom({ room: roomname, code: hashpassword, words }: TRoom) {
         return (await db.insert(rooms).values({
             name: roomname,
-            code: hashpassword
+            code: hashpassword,
+            words: words,
         }).returning())[0];
     }
 

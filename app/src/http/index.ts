@@ -10,19 +10,13 @@ const axiosRequestConfig: AxiosRequestConfig = {
     }
 }
 
-export async function getRoom(roomid: string) {
-    return await axios.get(
-        `/api/room/${roomid}`,
-        axiosRequestConfig
-    )
-}
-
-export async function createRoom({ name: roomname, code: password }: TRoom) {
+export async function createRoom({ name: roomname, code: password, words }: TRoom) {
     return await axios.post(
         "/api/room/create",
         {
             room: roomname,
-            code: password
+            code: password,
+            words: words
         },
         axiosRequestConfig
     )

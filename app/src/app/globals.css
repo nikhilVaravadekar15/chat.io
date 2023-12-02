@@ -88,6 +88,33 @@
   }
 }
 
+.MuiChipsInput-TextField {
+  @apply w-full h-[144px] text-white bg-transparent rounded flex flex-wrap;
+  border: 1px solid rgb(30, 41, 59);
+}
+
+.MuiOutlinedInput-root {
+  @apply h-full overflow-y-scroll;
+}
+
+.MuiInputBase-root::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+}
+
+.MuiInputBase-input {
+  @apply h-fit text-white rounded-2xl;
+}
+
+.MuiChipsInput-Chip {
+  @apply w-fit text-black bg-[#dcdc19] rounded-2xl;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border: none;
+  outline: none;
+}
+
 /* width */
 *::-webkit-scrollbar {
   width: 8px;

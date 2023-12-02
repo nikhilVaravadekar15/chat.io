@@ -1,41 +1,9 @@
-import { Response, Request } from "express";
 import { TRoom } from "../types";
+import { Response, Request } from "express";
 import RoomService from "../services/RoomService";
 import hashService from "../services/HashService";
 
 class RoomController {
-
-    async getRoom(request: Request, response: Response,) {
-
-        try {
-
-            const roomid: string = request.params.room;
-            if (!roomid) {
-                return response.status(400).json({
-                    "message": "All fields are required"
-                })
-            }
-
-            const room = await RoomService.getUniqueRoom(roomid!)
-            if (!room) {
-                return response.status(404).json({
-                    "message": "Invalid room id"
-                })
-            }
-
-            return response.status(200).json({
-                "room": room!
-            })
-
-        }
-        catch (error: any) {
-            console.log(error)
-            return response.status(500).json({
-                "message": "Something went wrong, please try again."
-            })
-        }
-
-    }
 
     async validateRoom(request: Request, response: Response,) {
 
@@ -80,7 +48,7 @@ class RoomController {
 
         try {
 
-            const { room: roomname, code: password }: TRoom = request.body;
+            const { room: roomname, code: password, words }: TRoom = request.body;
             if (!roomname || !password) {
                 return response.status(400).json({
                     "message": "All fields are required"
@@ -88,7 +56,9 @@ class RoomController {
             }
 
             const room = await RoomService.createRoom({
-                room: roomname!, code: await hashService.gethash(password!)
+                room: roomname!,
+                code: await hashService.gethash(password!),
+                words: words
             })
             if (!room) {
                 return response.status(500).json({

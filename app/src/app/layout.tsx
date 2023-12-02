@@ -6,7 +6,6 @@ import ReactQueryProvider from '@/components/providers/ReactQueryProvider'
 import { UserContextProvider } from '@/components/providers/UserContextProvider'
 import { RoomContextProvider } from '@/components/providers/RoomContextProvider'
 import { SecretcodeContextProvider } from '@/components/providers/SecretcodeContextProvider'
-import SocketContextProvider from '@/components/providers/SocketContextProvider'
 
 
 export const metadata: Metadata = {
@@ -30,20 +29,18 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ReactQueryProvider>
-          <SocketContextProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-            >
-              <RoomContextProvider>
-                <UserContextProvider>
-                  <SecretcodeContextProvider>
-                    {children}
-                  </SecretcodeContextProvider>
-                </UserContextProvider>
-              </RoomContextProvider>
-            </ThemeProvider>
-          </SocketContextProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+          >
+            <RoomContextProvider>
+              <UserContextProvider>
+                <SecretcodeContextProvider>
+                  {children}
+                </SecretcodeContextProvider>
+              </UserContextProvider>
+            </RoomContextProvider>
+          </ThemeProvider>
         </ReactQueryProvider>
         <Toaster />
       </body>

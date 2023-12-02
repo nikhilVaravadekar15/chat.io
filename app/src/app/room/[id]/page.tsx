@@ -2,18 +2,18 @@
 "use client"
 
 import React from 'react'
-import { useRouter } from 'next/navigation';
-import { Navbar } from '@/components/Navbar'
+import { validateRoom } from '@/http';
 import Spinner from '@/components/Spinner';
-import { getRoom, validateRoom } from '@/http';
+import { useRouter } from 'next/navigation';
+import { Navbar } from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
+import DrawingBoard from '@/components/DrawingBoard';
+import ChatRightSidebar from '@/components/ChatRightSidebar';
+import ParticipantsSidebar from '@/components/ParticipantsSidebar';
+import { useSocket } from '@/components/providers/SocketContextProvider';
 import { RoomContext } from '@/components/providers/RoomContextProvider';
 import { TSecretcodeContext, TRoomContext, TRoomDetails } from '@/types';
 import { SecretcodeContext } from '@/components/providers/SecretcodeContextProvider';
-import { useSocket } from '@/components/providers/SocketContextProvider';
-import ParticipantsSidebar from '@/components/ParticipantsSidebar';
-import DrawingBoard from '@/components/DrawingBoard';
-import ChatRightSidebar from '@/components/ChatRightSidebar';
 
 
 type Props = {
@@ -39,24 +39,13 @@ export default function Roompage({ params }: Props) {
 
     React.useEffect(() => {
         const roomid: string = params.id
-        if (!roomDetails.id && !roomDetails.created_at && !passwordDetails.code) {
-            getRoom(roomid)
-                .then((response) => {
-                    const room: TRoomDetails = response.data?.room
-                    if (room) {
-                        setStatus(true)
-                    }
-                }).catch((error) => {
-                    if (error.response.status === 404) {
-                        router.push("/not-found")
-                    }
-                })
+        if (!passwordDetails.code) {
+            console.log("check 1")
+            setStatus(true)
         }
-    }, [])
-
-    React.useEffect(() => {
-        const roomid: string = params.id
         if ((!roomDetails.id || !roomDetails.created_at) && passwordDetails.code) {
+            console.log("check 2")
+            setJoining(true)
             validateRoom({
                 name: roomid, code: passwordDetails.code
             }).then((response) => {
@@ -75,6 +64,8 @@ export default function Roompage({ params }: Props) {
                             error.response.data?.message : "Something went wrong, please try again later.",
                     })
                 }
+            }).finally(() => {
+                setJoining(false)
             })
         }
     }, [passwordDetails.code])
@@ -108,14 +99,24 @@ export default function Roompage({ params }: Props) {
 
     return (
         <main className="relative h-screen w-screen flex flex-col items-center">
-            <div className="h-[60px] w-full">
-                <Navbar />
-            </div>
-            <div className="h-[calc(100%-60px)] w-full grid grid-cols-[20%_minmax(55%,_1fr)_25%]">
-                <ParticipantsSidebar />
-                <DrawingBoard />
-                <ChatRightSidebar />
-            </div>
-        </main >
+            {
+                joining ? (
+                    <div className="h-full w-full flex items-center justify-center">
+                        <Spinner />
+                    </div>
+                ) : (
+                    <>
+                        <div className="h-[60px] w-full">
+                            <Navbar />
+                        </div>
+                        <div className="h-[calc(100%-60px)] w-full grid grid-cols-[20%_minmax(55%,_1fr)_25%]">
+                            <ParticipantsSidebar />
+                            <DrawingBoard />
+                            <ChatRightSidebar />
+                        </div>
+                    </>
+                )
+            }
+        </main>
     )
 }
