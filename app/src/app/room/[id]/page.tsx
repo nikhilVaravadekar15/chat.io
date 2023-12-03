@@ -6,25 +6,20 @@ import { validateRoom } from '@/http';
 import Spinner from '@/components/Spinner';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
+import { CanvasPath } from 'react-sketch-canvas';
+import ChatRightSidebar from '@/components/Chats';
 import { useToast } from '@/components/ui/use-toast';
-import DrawingBoard from '@/components/DrawingBoard';
-import ChatRightSidebar from '@/components/ChatRightSidebar';
-import ParticipantsSidebar from '@/components/ParticipantsSidebar';
+import ParticipantsSidebar from '@/components/Participants';
+import DrawingBoard, { ViewingBoard } from '@/components/DrawingBoard';
 import { useSocket } from '@/components/providers/SocketContextProvider';
 import { RoomContext } from '@/components/providers/RoomContextProvider';
-import { TSecretcodeContext, TRoomContext, TRoomDetails } from '@/types';
 import { SecretcodeContext } from '@/components/providers/SecretcodeContextProvider';
+import { TSecretcodeContext, TRoomContext, TRoomDetails, TParticipant } from '@/types';
 
 
 type Props = {
     params: { id: string },
     searchParams: {}
-}
-
-type TParticipant = {
-    socketid: string,
-    username: string,
-    joining?: true
 }
 
 export default function Roompage({ params }: Props) {
@@ -33,6 +28,11 @@ export default function Roompage({ params }: Props) {
     const router = useRouter()
     const { toast } = useToast()
     const [joining, setJoining] = React.useState<boolean>(false)
+    const [currentuser, setCurrentuser] = React.useState<TParticipant>({
+        socketid: "", username: ""
+    })
+    const [allowed, setAllowed] = React.useState<boolean>(true);
+    const [canvas, setCanvas] = React.useState<CanvasPath[]>([]);
     const [participants, setParticipants] = React.useState<TParticipant[]>([])
     const { roomDetails, setRoomDetails } = React.useContext<TRoomContext>(RoomContext)
     const { setStatus, passwordDetails } = React.useContext<TSecretcodeContext>(SecretcodeContext)
@@ -40,11 +40,9 @@ export default function Roompage({ params }: Props) {
     React.useEffect(() => {
         const roomid: string = params.id
         if (!passwordDetails.code) {
-            console.log("check 1")
             setStatus(true)
         }
         if ((!roomDetails.id || !roomDetails.created_at) && passwordDetails.code) {
-            console.log("check 2")
             setJoining(true)
             validateRoom({
                 name: roomid, code: passwordDetails.code
@@ -74,13 +72,44 @@ export default function Roompage({ params }: Props) {
         const roomid: string = params.id
 
         if (roomDetails.id && roomDetails.created_at && passwordDetails.code) {
-            console.log("room:join")
-            socket?.emit("room:join", { roomid: roomid });
+            socket?.emit("room:user:join", { roomid: roomid });
         }
 
         socket?.on("room:user:joined", async (data) => {
+            if (data.socketid === socket.id) {
+                setCurrentuser(data)
+            }
             setParticipants((prevData: TParticipant[]) => {
-                return [...prevData, data]
+                const tempdata: TParticipant[] = [...prevData]
+                tempdata.push(data)
+                return tempdata
+            })
+        });
+
+        socket?.on("room:user:user-name-changed", async (data) => {
+            if (data.socketid === socket.id) {
+                setCurrentuser(data)
+            }
+            setParticipants((prevData: TParticipant[]) => {
+                const tempdata = prevData.filter((participant: TParticipant) => {
+                    return data.socketid != participant.socketid
+                })
+                tempdata.push(data)
+                return tempdata
+            })
+        });
+
+        socket?.on("room:user:drawing", async ({ canvas, allowedToDraw }) => {
+            setAllowed(allowedToDraw);
+            setCanvas(canvas)
+        });
+
+        socket?.on("room:user:left", async (data) => {
+            setParticipants((prevData: TParticipant[]) => {
+                const tempdata = prevData.filter((participant: TParticipant) => {
+                    return data.socketid != participant.socketid
+                })
+                return tempdata
             })
         });
 
@@ -89,9 +118,9 @@ export default function Roompage({ params }: Props) {
         });
 
         return () => {
-            socket?.off("room:join");
-            socket?.off("room:user:joining");
             socket?.off("room:user:joined");
+            socket?.off("room:user:user-name-changed");
+            socket?.off("room:user:left");
             socket?.off("disconnect");
         };
 
@@ -110,9 +139,26 @@ export default function Roompage({ params }: Props) {
                             <Navbar />
                         </div>
                         <div className="h-[calc(100%-60px)] w-full grid grid-cols-[20%_minmax(55%,_1fr)_25%]">
-                            <ParticipantsSidebar />
-                            <DrawingBoard />
-                            <ChatRightSidebar />
+                            <ParticipantsSidebar
+                                participants={participants}
+                            />
+                            {/* {
+                                allowed ? (
+                                    <DrawingBoard
+                                        user={currentuser}
+                                    />
+                                ) : (
+                                    <ViewingBoard
+                                        drawings={canvas}
+                                    />
+                                )
+                            } */}
+                            <DrawingBoard
+                                user={currentuser}
+                            />
+                            <ChatRightSidebar
+                                user={currentuser}
+                            />
                         </div>
                     </>
                 )

@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/toaster'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import ReactQueryProvider from '@/components/providers/ReactQueryProvider'
-import { UserContextProvider } from '@/components/providers/UserContextProvider'
 import { RoomContextProvider } from '@/components/providers/RoomContextProvider'
 import { SecretcodeContextProvider } from '@/components/providers/SecretcodeContextProvider'
 
@@ -34,11 +33,9 @@ export default function RootLayout({
             defaultTheme="dark"
           >
             <RoomContextProvider>
-              <UserContextProvider>
-                <SecretcodeContextProvider>
-                  {children}
-                </SecretcodeContextProvider>
-              </UserContextProvider>
+              <SecretcodeContextProvider>
+                {children}
+              </SecretcodeContextProvider>
             </RoomContextProvider>
           </ThemeProvider>
         </ReactQueryProvider>

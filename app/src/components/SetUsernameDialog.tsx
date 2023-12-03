@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import {
@@ -13,20 +14,25 @@ import { username } from "@/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TUser, TUserContext } from "@/types";
+import { TRoomContext, TUser, TUserContext } from "@/types";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserContext } from "@/components/providers/UserContextProvider";
+import { useSocket } from "./providers/SocketContextProvider";
+import { RoomContext } from "./providers/RoomContextProvider";
 
 
-export default function UserDialog() {
+export default function SetUsernameDialog() {
 
+    const socket = useSocket()
     const {
         register, getFieldState, handleSubmit
     } = useForm<TUser>({
         resolver: zodResolver(username),
     });
+    const { roomDetails } = React.useContext<TRoomContext>(RoomContext)
     const { userDetails, setUserDetails } = React.useContext<TUserContext>(UserContext);
+
 
     return (
         <Dialog>
@@ -54,8 +60,11 @@ export default function UserDialog() {
                 <form
                     className="space-y-4"
                     onSubmit={handleSubmit((data) => {
-                        console.log(data)
                         setUserDetails(data)
+                        socket?.emit("room:user:user-name-change", {
+                            roomid: roomDetails.id,
+                            username: data.name
+                        })
                     })}
                 >
                     <div className="space-y-1">

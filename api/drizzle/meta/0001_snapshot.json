@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "a45e3493-f12f-4d38-b373-4be689bf1fb6",
+  "id": "c6318b91-918f-43e0-b686-dd8358b8f6a1",
   "prevId": "7f8d79f4-5381-4ab8-9bcc-f47f810448b8",
   "tables": {
     "rooms": {
@@ -27,22 +27,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "rounds": {
-          "name": "rounds",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 10
-        },
-        "timer": {
-          "name": "timer",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 30
         },
         "words": {
           "name": "words",

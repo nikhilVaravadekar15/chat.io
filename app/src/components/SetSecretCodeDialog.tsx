@@ -6,20 +6,19 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
 } from "@/components/ui/dialog";
 import React from "react";
 import { password } from "@/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TCode, TSecretcodeContext } from "@/types";
 import { Button } from "@/components/ui/button";
+import { TCode, TSecretcodeContext } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SecretcodeContext } from "@/components/providers/SecretcodeContextProvider";
 
 
-export default function CodeDialog() {
+export default function SetSecretCodeDialog() {
 
     const { status, setStatus, setPasswordDetails } = React.useContext<TSecretcodeContext>(SecretcodeContext)
     const {

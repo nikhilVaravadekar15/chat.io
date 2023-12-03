@@ -31,8 +31,8 @@ import { MuiChipsInput } from 'mui-chips-input'
 import { useToast } from '@/components/ui/use-toast'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRoom, TRoomContext, TRoomDetails, TSecretcodeContext } from "@/types"
 import { RoomContext } from '@/components/providers/RoomContextProvider'
+import { TRoom, TRoomContext, TRoomDetails, TSecretcodeContext } from "@/types"
 import { SecretcodeContext } from '@/components/providers/SecretcodeContextProvider'
 
 
@@ -64,6 +64,7 @@ export default function Home() {
       router.push(`/room/${room.id!}`)
     },
     onError: (error: any) => {
+      console.error(error)
       toast({
         variant: "destructive",
         title: "Unable to create room",
@@ -127,7 +128,7 @@ export default function Home() {
                           Note: If kept empty them then
                           <Link
                             target={"_blank"}
-                            className="mx-1 text-blue-400 hover:underline hover:text-[#ffff16] hover:no-underline"
+                            className="mx-1 text-blue-400 hover:text-[#ffff16] hover:no-underline"
                             href={`${process.env.NEXT_PUBLIC_BASE_API_URL!}api/words`}
                           >
                             most common words in english language

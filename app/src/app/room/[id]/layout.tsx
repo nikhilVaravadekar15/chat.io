@@ -1,4 +1,5 @@
-import CodeDialog from '@/components/CodeDialog'
+import SetSecretCodeDialog from '@/components/SetSecretCodeDialog'
+import { UserContextProvider } from '@/components/providers/UserContextProvider'
 import SocketContextProvider from '@/components/providers/SocketContextProvider'
 
 
@@ -9,8 +10,10 @@ export default function RootLayout({
 }) {
   return (
     <SocketContextProvider>
-      {children}
-      <CodeDialog />
+      <UserContextProvider>
+        {children}
+      </UserContextProvider>
+      <SetSecretCodeDialog />
     </SocketContextProvider>
   )
 }

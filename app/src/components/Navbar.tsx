@@ -5,8 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { TRoomContext } from '@/types'
 import { Badge } from "@/components/ui/badge"
-import UserDialog from "@/components/UserDialog"
 import InvitePopover from '@/components/InvitePopover'
+import SetUsernameDialog from "@/components/SetUsernameDialog"
 import { RoomContext } from '@/components/providers/RoomContextProvider'
 
 
@@ -37,7 +37,7 @@ export function Navbar() {
                 }
             </div>
             <div className="flex gap-3 items-center justify-center">
-                <UserDialog />
+                <SetUsernameDialog />
                 <InvitePopover />
             </div>
         </div>
