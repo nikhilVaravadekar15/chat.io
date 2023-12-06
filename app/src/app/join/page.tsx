@@ -1,8 +1,8 @@
 "use client"
 
 import {
-    Hash,
-    ArrowBigRight
+    ArrowBigRight,
+    MessagesSquare
 } from 'lucide-react'
 import {
     Card,
@@ -68,13 +68,13 @@ export default function JoinPage() {
             <Card className="w-[448px]">
                 <CardHeader>
                     <CardTitle className="flex gap-1 items-center">
-                        <Hash className="animate-bounce cursor-pointer text-[#ffff16]" />
+                        <MessagesSquare className="text-teal-500 cursor-pointer hover:text-teal-600" />
                         Join room
                     </CardTitle>
                     <CardDescription className="flex gap-2 items-center">
                         <span>Join new room in one-click</span>
                         or
-                        <Link href={"/create"} className="text-blue-400 text-base font-bold hover:underline hover:text-[#ffff16]">Create</Link>
+                        <Link href={"/create"} className="text-sm font-bold hover:underline hover:text-teal-500">Create</Link>
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -107,7 +107,7 @@ export default function JoinPage() {
                         <div className="flex items-center justify-end">
                             <Button
                                 type={"submit"}
-                                className="bg-[#ffff16] hover:bg-[#e4e440]"
+                                className="bg-teal-400 hover:bg-teal-500"
                             >
                                 Join
                                 <ArrowBigRight size={"1.25rem"} />

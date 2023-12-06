@@ -6,16 +6,19 @@ import { rooms } from "../database/schema";
 
 class RoomService {
 
-    async createRoom({ room: roomname, code: hashpassword, words }: TRoom) {
+    async createRoom({ room: roomname, code: hashpassword }: TRoom) {
         return (await db.insert(rooms).values({
             name: roomname,
             code: hashpassword,
-            words: words,
         }).returning())[0];
     }
 
     async getUniqueRoom(roomid: string) {
         return (await db.select().from(rooms).where(eq(rooms.id, roomid)))[0];
+    }
+
+    async deleteRoomById(roomid: string) {
+        return (await db.delete(rooms).where(eq(rooms.id, roomid)).returning())[0]
     }
 
 }

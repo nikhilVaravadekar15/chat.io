@@ -9,11 +9,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <SocketContextProvider>
-      <UserContextProvider>
-        {children}
-      </UserContextProvider>
-      <SetSecretCodeDialog />
-    </SocketContextProvider>
+    <>
+      <SocketContextProvider>
+        <UserContextProvider>
+          {children}
+        </UserContextProvider>
+        <SetSecretCodeDialog />
+      </SocketContextProvider>
+    </>
   )
 }

@@ -15,18 +15,18 @@ export function Navbar() {
     const { roomDetails } = React.useContext<TRoomContext>(RoomContext);
 
     return (
-        <div className="h-full w-full p-2 flex items-center justify-between border rounded-md">
+        <div className="h-full w-full p-2 flex items-center justify-between border rounded-md bg-slate-50">
             <div className="flex gap-6 items-center cursor-pointer">
                 <Link href="/" className="flex gap-1 items-center justify-center">
                     <Image
-                        src={"/apple-icon.png"}
+                        src={"/chat.png"}
                         alt="logo"
                         width={32}
                         height={32}
                         draggable={false}
                         className="cursor-pointer"
                     />
-                    <div className="text-lg font-bold">Skibble</div>
+                    <div className="text-lg font-bold">Chat.io</div>
                 </Link>
                 {
                     roomDetails.name && (

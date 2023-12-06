@@ -8,6 +8,7 @@ import router from './src/routes/router';
 import fakerService from './src/services/FakerService';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { TMessage } from './src/types';
+import RoomService from './src/services/RoomService';
 
 
 // # Map<roomid, Map<socketid, username>
@@ -50,33 +51,33 @@ socketIo.on("connection", (socket) => {
         if (!map.get(roomid)) {
             map.set(roomid, new Map())
         }
+        if (map.get(roomid)?.get(socket.id) === undefined) {
+            console.log("undefined")
+        }
         map.get(roomid)?.set(socket.id, fakerService.getFullName())
-        // join room
-        socket.join(roomid)
-        // broadcast to all the clients 
-        socketIo.to(roomid).emit("room:user:joined", {
-            socketid: socket.id,
-            username: map.get(roomid)?.get(socket.id),
-        })
-        socketIo.to(roomid).emit("room:user:messaged", {
-            socketid: socket.id,
-            username: "system",
-            message: `${map.get(roomid)?.get(socket.id)} joined the room`
-        })
-        // send the other client socket id to the sender
-        map.get(roomid)?.forEach((username: string, socketid: string) => {
-            if (socketid != socket.id) {
-                socketIo.to(socket.id).emit("room:user:joined", {
-                    socketid: socketid,
-                    username: username,
-                })
-            }
-        })
-
-        // console.info(map)
-        // if (map.get(roomid)?.size! >= 2) {
-        //     socketIo.to(roomid).emit("room:start")
-        // }
+        if (!socket.rooms.has(roomid)) {
+            // join room
+            socket.join(roomid)
+            // broadcast to all the clients 
+            socketIo.to(roomid).emit("room:user:joined", {
+                socketid: socket.id,
+                username: map.get(roomid)?.get(socket.id),
+            })
+            socketIo.to(roomid).emit("room:user:messaged", {
+                socketid: socket.id,
+                username: "system",
+                message: `${map.get(roomid)?.get(socket.id)} joined the room`
+            })
+            // send the other client socket id to the sender
+            map.get(roomid)?.forEach((username: string, socketid: string) => {
+                if (socketid != socket.id) {
+                    socketIo.to(socket.id).emit("room:user:joined", {
+                        socketid: socketid,
+                        username: username,
+                    })
+                }
+            })
+        }
     })
 
     socket.on("room:user:user-name-change", ({ roomid, username }) => {
@@ -99,38 +100,18 @@ socketIo.on("connection", (socket) => {
         })
     })
 
-    socket.on("room:user:start-drawing", ({ roomid, user, canvas }) => {
-
-        // broadcast to all the clients
-        socketIo.in(roomid).emit("room:user:drawing", {
-            canvas: canvas,
-            allowedToDraw: false
-        })
-
-    })
-
     socket.on("room:user:message", ({ roomid, msg }) => {
-
         // broadcast to all the clients 
-        if (msg.message === "correct") {
-            socketIo.to(roomid).emit("room:user:messaged", {
-                socketid: msg.socketid,
-                username: msg.username,
-                message: "🎉 Guessed the word 🎊",
-                status: true
-            } as TMessage)
-        } else {
-            socketIo.to(roomid).emit("room:user:messaged", {
-                socketid: msg.socketid,
-                username: msg.username,
-                message: msg.message,
-                status: false
-            } as TMessage)
-        }
+        socketIo.to(roomid).emit("room:user:messaged", {
+            socketid: msg.socketid,
+            username: msg.username,
+            message: msg.message,
+            timestamp: msg.timestamp,
+        } as TMessage)
     })
 
     socket.on("disconnect", () => {
-        map.forEach((mapvalue, mapkey) => {
+        map.forEach(async (mapvalue, mapkey) => {
             if (mapvalue.has(socket.id)) {
                 socket.to(mapkey).emit("room:user:left", {
                     socketid: socket.id,
@@ -143,6 +124,15 @@ socketIo.on("connection", (socket) => {
                     status: false
                 } as TMessage)
                 mapvalue?.delete(socket.id)
+                if (mapvalue.size == 0) {
+                    try {
+                        map.delete(mapkey)
+                        await RoomService.deleteRoomById(mapkey)
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+
             }
         })
         socket.disconnect(true);

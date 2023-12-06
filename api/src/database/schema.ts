@@ -9,7 +9,6 @@ export const rooms = sqliteTable(
         id: text("id").primaryKey().unique().notNull().$defaultFn(() => createId()),
         name: text("name").notNull(),
         code: text("code").notNull(),
-        words: text("words", { mode: "json" }),
         created_at: text("created_at").notNull().default(sql`CURRENT_TIMESTAMP`),
     }
 );

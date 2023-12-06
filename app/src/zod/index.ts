@@ -18,6 +18,5 @@ export const room = z.object({
         .max(256, "Room name must be less than 256 characters"),
     code: z.string()
         .min(1, "Required")
-        .max(256, "Secret code must be less than 256 characters"),
-    words: z.array(z.string()).default([]).optional()
+        .max(256, "Secret code must be less than 256 characters")
 })

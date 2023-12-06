@@ -2,8 +2,8 @@
 
 import {
   Info,
-  Hash,
   ArrowBigRight,
+  MessagesSquare,
 } from 'lucide-react'
 import {
   Card,
@@ -27,9 +27,8 @@ import { useRouter } from 'next/navigation'
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { MuiChipsInput } from 'mui-chips-input'
 import { useToast } from '@/components/ui/use-toast'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RoomContext } from '@/components/providers/RoomContextProvider'
 import { TRoom, TRoomContext, TRoomDetails, TSecretcodeContext } from "@/types"
@@ -79,13 +78,13 @@ export default function Home() {
         <Card className="h-fit w-[448px]">
           <CardHeader>
             <CardTitle className="flex gap-1 items-center">
-              <Hash className="animate-bounce cursor-pointer text-[#ffff16]" />
+              <MessagesSquare className="text-teal-500 cursor-pointer hover:text-teal-600" />
               Create room
             </CardTitle>
             <CardDescription className="flex gap-2 items-center">
               <span>Create new room in one-click</span>
               or
-              <Link href={"/join"} className="text-blue-400 text-base font-bold hover:underline hover:text-[#ffff16]">Join</Link>
+              <Link href={"/join"} className="text-sm font-bold hover:underline hover:text-teal-500">Join</Link>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -115,47 +114,10 @@ export default function Home() {
                 />
                 <span className="text-xs text-red-500">{getFieldState("code").error?.message}</span>
               </div>
-              <div className="space-y-1">
-                <Label className="flex gap-1 items-center">
-                  Custom words
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild className="cursor-pointer">
-                        <Info />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="p-2 w-64">
-                          Note: If kept empty them then
-                          <Link
-                            target={"_blank"}
-                            className="mx-1 text-blue-400 hover:text-[#ffff16] hover:no-underline"
-                            href={`${process.env.NEXT_PUBLIC_BASE_API_URL!}api/words`}
-                          >
-                            most common words in english language
-                          </Link>
-                          will be used.
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </Label>
-                <Controller
-                  name="words"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <MuiChipsInput
-                      {...field}
-                      hideClearAll
-                      error={fieldState.invalid}
-                    />
-                  )}
-                />
-                <span className="text-xs text-red-500">{getFieldState("code").error?.message}</span>
-              </div>
               <div className="flex items-center justify-end">
                 <Button
                   type={"submit"}
-                  className="bg-[#ffff16] hover:bg-[#e4e440]"
+                  className="bg-teal-400 hover:bg-teal-500"
                 >
                   Create
                   <ArrowBigRight size={"1.25rem"} />

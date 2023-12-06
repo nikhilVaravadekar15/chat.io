@@ -48,7 +48,7 @@ class RoomController {
 
         try {
 
-            const { room: roomname, code: password, words }: TRoom = request.body;
+            const { room: roomname, code: password }: TRoom = request.body;
             if (!roomname || !password) {
                 return response.status(400).json({
                     "message": "All fields are required"
@@ -58,7 +58,6 @@ class RoomController {
             const room = await RoomService.createRoom({
                 room: roomname!,
                 code: await hashService.gethash(password!),
-                words: words
             })
             if (!room) {
                 return response.status(500).json({

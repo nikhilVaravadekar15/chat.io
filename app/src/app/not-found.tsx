@@ -19,7 +19,7 @@ export default function NotFound() {
             <div className="mt-4 flex items-center justify-center gap-x-3">
                 <Link
                     href={"/"} passHref={true}
-                    className="text-sm py-4 px-8 flex gap-2 items-center justify-center font-semibold text-black rounded-2xl bg-[#ffff16] hover:bg-[#e4e440]"
+                    className="text-sm py-4 px-8 flex gap-2 items-center justify-center font-semibold text-black rounded-2xl bg-teal-400 hover:bg-teal-500"
                 >
                     <ArrowBigLeft size={20} />
                     Go back

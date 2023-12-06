@@ -2,9 +2,6 @@
 export type TRoom = {
     room: string
     code: string
-    rounds?: number,
-    timer?: number,
-    words?: string[]
 }
 
 export type TWord = {
@@ -16,5 +13,5 @@ export type TMessage = {
     socketid: string,
     username: string,
     message: string,
-    status?: boolean
+    timestamp?: string
 }
