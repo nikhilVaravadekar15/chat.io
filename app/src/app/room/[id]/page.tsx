@@ -32,6 +32,17 @@ export default function Roompage({ params }: Props) {
     const { status, setStatus, passwordDetails } = React.useContext<TSecretcodeContext>(SecretcodeContext)
 
     React.useEffect(() => {
+        const unloadCallback = (event: any) => {
+            event.preventDefault();
+            event.returnValue = "";
+            return "";
+        };
+
+        window.addEventListener("beforeunload", unloadCallback);
+        return () => window.removeEventListener("beforeunload", unloadCallback);
+    }, []);
+
+    React.useEffect(() => {
         const roomid: string = params.id
         if (!passwordDetails.code) {
             setStatus(true)
