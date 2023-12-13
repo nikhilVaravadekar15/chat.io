@@ -65,7 +65,7 @@ export default function Home() {
   )
 }
 
-export function CreateRoomCard() {
+function CreateRoomCard() {
 
   const router = useRouter()
   const { toast } = useToast()
@@ -155,7 +155,7 @@ export function CreateRoomCard() {
   )
 }
 
-export function JoinRoomCard() {
+function JoinRoomCard() {
 
   const router = useRouter()
   const { toast } = useToast()

@@ -1,15 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
+import {
+    FileDown,
+    FilePlus2,
+    Laugh,
+    Paperclip,
+    Send,
+    Upload
+} from 'lucide-react'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from './ui/button'
-import { Laugh, Send } from 'lucide-react'
 import { Input } from "@/components/./ui/input"
 import { TParticipant, TRoomContext } from '@/types'
 import { RoomContext } from './providers/RoomContextProvider'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { useSocket } from '@/components/providers/SocketContextProvider'
+import { useDropzone } from 'react-dropzone'
+import { useToast } from './ui/use-toast'
 
 
 type Props = {
@@ -20,17 +35,45 @@ type TMessage = {
     socketid: string,
     username: string,
     message: string,
+    file?: {
+        name: string,
+        type: string,
+        size: number,
+        file: File
+    }
     timestamp?: string
 }
 
 export default function Chats({ user }: Props) {
 
+    const { toast } = useToast()
     const socket = useSocket()
     const [text, setText] = React.useState<string>('')
     const lastElementRef = React.useRef<HTMLDivElement>(null);
     const [emoji, setEmoji] = React.useState<boolean>(false)
     const [messages, setMessages] = React.useState<TMessage[]>([])
     const { roomDetails } = React.useContext<TRoomContext>(RoomContext)
+    const [file, setFile] = React.useState<File | null>(null)
+
+    const onFileDrop = React.useCallback(async (acceptedFiles: File[]) => {
+        let file: File = acceptedFiles[0]
+        console.log(file.size)
+        if (file.size > (512 * 1024 * 1024)) {
+            toast({
+                variant: "destructive",
+                title: "Unable to upload file",
+                description: "File size cannnot greater than 512MB, please try again later.",
+            })
+        } else {
+            setFile(file)
+            setText("📁 " + file.name + "\n")
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop: onFileDrop,
+    })
 
     function handleOnEnter() {
         if (text.trim() === "") return
@@ -40,9 +83,16 @@ export default function Chats({ user }: Props) {
                 socketid: user.socketid,
                 username: user.username,
                 message: text,
+                file: file && {
+                    name: file?.name,
+                    type: file?.type,
+                    size: file?.size,
+                    file: file
+                },
                 timestamp: new Date().toLocaleString()
             } as TMessage
         })
+        setFile(null)
         setText("")
     }
 
@@ -60,6 +110,7 @@ export default function Chats({ user }: Props) {
                     socketid: data.socketid,
                     username: data.username,
                     message: data.message,
+                    file: data.file,
                     timestamp: data?.timestamp
                 } as TMessage]
             })
@@ -83,6 +134,7 @@ export default function Chats({ user }: Props) {
                     </div>
                     {
                         messages.map((message: TMessage, index: number) => {
+                            console.log(message.file)
                             return (
                                 <div
                                     key={index}
@@ -115,10 +167,32 @@ export default function Chats({ user }: Props) {
 
                                                     {message.username}
                                                 </span>
-                                                <span className="text-xs">
-                                                    {message.message}
-                                                </span>
-                                                <p className="text-right text-xs text-grey-dark mt-1">
+
+                                                <div className="flex gap-2 flex-col">
+                                                    {
+                                                        message?.file && (
+                                                            <Button
+                                                                variant={"outline"}
+                                                                onClick={() => {
+                                                                    const element = document.createElement("a");
+                                                                    const newfile = new Blob([message.file?.file!], { type: message.file?.type! });
+                                                                    element.href = URL.createObjectURL(newfile);
+                                                                    element.download = message.file?.name!;
+                                                                    document.body.appendChild(element); // Required for this to work in FireFox
+                                                                    element.click();
+                                                                }}
+                                                                className="border flex gap-2 rounded-full text-gray-500 hover:text-gray-600"
+                                                            >
+                                                                <FileDown />
+                                                                <span>Download</span>
+                                                            </Button>
+                                                        )
+                                                    }
+                                                    <span className="text-xs">
+                                                        {message.message}
+                                                    </span>
+                                                </div>
+                                                <p className="mt-3 text-right text-xs text-grey-dark">
                                                     {message?.timestamp}
                                                 </p>
                                             </div>
@@ -145,6 +219,49 @@ export default function Chats({ user }: Props) {
                     className="h-[48px] resize-none focus-visible:outline-none focus-visible:ring-0"
                 />
                 <div className="flex gap-1 items-center justify-center">
+
+                    <div>
+                        {
+                            file ? (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className="border border-red-800 rounded-full text-gray-500 hover:text-gray-600"
+                                            >
+                                                <FilePlus2 className="h-4 w-4 text-red-800" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p className="p-1">{file.name}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            ) : (
+                                <div {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    {
+                                        isDragActive ? (
+                                            <Button
+                                                variant={"outline"}
+                                                className="border rounded-full text-gray-500 hover:text-gray-600"
+                                            >
+                                                <Upload />
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={"outline"}
+                                                className="border rounded-full text-gray-500 hover:text-gray-600"
+                                            >
+                                                <Paperclip />
+                                            </Button>
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
+                    </div>
                     <Button
                         variant={"outline"}
                         onClick={() => {

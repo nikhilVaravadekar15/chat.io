@@ -20,13 +20,13 @@ type Props = {
 export default function Participants({ participants }: Props) {
     return (
         <div className="h-full w-full border rounded-l overflow-y-scroll bg-slate-50">
-            <div className="w-full p-3 grid gap-1 grid-cols-1 items-center md:grid-cols-3">
+            <div className="w-full p-1 grid gap-1 grid-cols-1 items-center md:p-3 md:grid-cols-2 lg:grid-cols-3">
                 {
                     participants.map((participant: TParticipant, index: number) => {
                         return (
                             <div
                                 key={index}
-                                className="h-[70px] w-[70px] flex items-center justify-center cursor-pointer border bg-[#FCF4CB] rounded-2xl hover:shadow-lg hover:shadow-teal-100"
+                                className="h-[60px] w-[60px] flex items-center justify-center cursor-pointer border bg-[#FCF4CB] rounded-2xl hover:shadow-lg hover:shadow-teal-100 md:h-[70px] md:w-[70px]"
                             >
                                 <TooltipProvider>
                                     <Tooltip>

@@ -27,7 +27,8 @@ const app: Express = express();
 const httpServer: http.Server = http.createServer(app)
 const port = parseInt(process.env.PORT!)
 const socketIo: io.Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> = new io.Server(httpServer, {
-    cors: CORS
+    cors: CORS,
+    maxHttpBufferSize: 512e8 // 512MB
 })
 
 // https://expressjs.com/en/resources/middleware/cors.html
@@ -106,6 +107,7 @@ socketIo.on("connection", (socket) => {
             socketid: msg.socketid,
             username: msg.username,
             message: msg.message,
+            file: msg?.file,
             timestamp: msg.timestamp,
         } as TMessage)
     })

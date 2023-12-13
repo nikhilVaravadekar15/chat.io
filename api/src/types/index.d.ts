@@ -13,5 +13,6 @@ export type TMessage = {
     socketid: string,
     username: string,
     message: string,
+    file?: any
     timestamp?: string
 }
